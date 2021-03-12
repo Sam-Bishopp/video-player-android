@@ -1,5 +1,9 @@
 package com.sambishopp.videoplayer.activities;
 
+import android.os.Bundle;
+
+import com.sambishopp.videoplayer.R;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
@@ -7,4 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
  */
 public class MediaActivity extends AppCompatActivity {
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_media);
+    }
 }

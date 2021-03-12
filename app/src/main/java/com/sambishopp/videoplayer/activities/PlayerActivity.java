@@ -21,7 +21,6 @@ public class PlayerActivity extends AppCompatActivity {
     private SimpleExoPlayer player;
     private PlayerView playerView;
 
-    //private MediaItem localVideo = MediaItem.fromUri("android.resource://$packageName/${R.raw.test}");
     private boolean playWhenReady = true;
     private int currentWindow = 0;
     private long playbackPosition = 0;
