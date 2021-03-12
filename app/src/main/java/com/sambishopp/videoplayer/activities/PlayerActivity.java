@@ -12,6 +12,10 @@ import com.sambishopp.videoplayer.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
+/**
+ * Fullscreen activity to play media.
+ */
 public class PlayerActivity extends AppCompatActivity {
 
     private SimpleExoPlayer player;
@@ -63,12 +67,10 @@ public class PlayerActivity extends AppCompatActivity {
     {
         player = new SimpleExoPlayer.Builder(this).build();
 
-        //MediaItem mediaItem = MediaItem.fromUri(getString(R.string.media_url_mp4));
-
         Uri uri = RawResourceDataSource.buildRawResourceUri(R.raw.test);
 
-        player.setMediaItem(MediaItem.fromUri(uri));
         playerView.setPlayer(player);
+        player.setMediaItem(MediaItem.fromUri(uri));
         player.setPlayWhenReady(playWhenReady);
         player.seekTo(currentWindow, playbackPosition);
         player.prepare();
