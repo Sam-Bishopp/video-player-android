@@ -61,7 +61,7 @@ public class PlayerActivity extends AppCompatActivity {
         player = new SimpleExoPlayer.Builder(this).build();
         playerView.setPlayer(player);
 
-        MediaItem mediaItem = MediaItem.fromUri("android.resource://$packageName/${R.raw.test}");
+        MediaItem mediaItem = MediaItem.fromUri(getString(R.string.media_url_mp4));
         player.setMediaItem(mediaItem);
 
         player.setPlayWhenReady(playWhenReady);
