@@ -1,11 +1,15 @@
 package com.sambishopp.videoplayer.activities;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
-import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.sambishopp.videoplayer.R;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +19,7 @@ public class PlayerActivity extends AppCompatActivity {
     private SimpleExoPlayer player;
     private PlayerView playerView;
 
+    //private MediaItem localVideo = MediaItem.fromUri("android.resource://$packageName/${R.raw.test}");
     private boolean playWhenReady = true;
     private int currentWindow = 0;
     private long playbackPosition = 0;
@@ -59,14 +64,26 @@ public class PlayerActivity extends AppCompatActivity {
     private void initializePlayer()
     {
         player = new SimpleExoPlayer.Builder(this).build();
+
+        //MediaItem mediaItem = MediaItem.fromUri(getString(R.string.media_url_mp4));
+
+        String localVideoPath = RawResourceDataSource.buildRawResourceUri(R.raw.test).toString();
+        Uri uri = RawResourceDataSource.buildRawResourceUri(R.raw.test);
+
+        ExtractorMediaSource mediaSource = new ExtractorMediaSource(
+                uri,
+                new DefaultDataSourceFactory(this, "Exoplayer"),
+                new DefaultExtractorsFactory(),
+                null,
+                null
+        );
+
+
+        //player.setMediaItem();
         playerView.setPlayer(player);
-
-        MediaItem mediaItem = MediaItem.fromUri(getString(R.string.media_url_mp4));
-        player.setMediaItem(mediaItem);
-
         player.setPlayWhenReady(playWhenReady);
         player.seekTo(currentWindow, playbackPosition);
-        player.prepare();
+        player.prepare(mediaSource);
     }
 
     private void hideSystemUi() {
