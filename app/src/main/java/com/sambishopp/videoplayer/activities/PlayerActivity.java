@@ -7,7 +7,6 @@ import android.view.View;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.sambishopp.videoplayer.R;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,7 +66,8 @@ public class PlayerActivity extends AppCompatActivity {
     {
         player = new SimpleExoPlayer.Builder(this).build();
 
-        Uri uri = RawResourceDataSource.buildRawResourceUri(R.raw.test);
+        Uri uri = getIntent().getParcelableExtra("videoUri");
+        //Uri uri = RawResourceDataSource.buildRawResourceUri(R.raw.test);
 
         playerView.setPlayer(player);
         player.setMediaItem(MediaItem.fromUri(uri));

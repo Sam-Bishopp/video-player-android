@@ -1,9 +1,13 @@
 package com.sambishopp.videoplayer.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.sambishopp.videoplayer.R;
@@ -21,6 +25,7 @@ public class MediaActivity extends AppCompatActivity {
 
     private int STORAGE_WRITE_PERMISSION_CODE = 100;
     private String path = "PlayerTest" + "/" + "videos";
+    private Uri videoUri = Uri.parse("PlayerTest" + "/" + "videos" + "video.mp4");
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,7 +33,23 @@ public class MediaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_media);
 
         checkStoragePermissions(); //Check storage access permissions when the app starts.
+
+        Button playVideo = findViewById(R.id.playerTest);
+        playVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openActivity();
+            }
+        });
     }
+
+    public void openActivity()
+    {
+        Intent intent = new Intent(this, PlayerActivity.class);
+        intent.putExtra("videoUri", videoUri);
+        startActivity(intent);
+    }
+
 
     //If permission is already granted; try to create directory. Otherwise request permission.
     private void checkStoragePermissions()
