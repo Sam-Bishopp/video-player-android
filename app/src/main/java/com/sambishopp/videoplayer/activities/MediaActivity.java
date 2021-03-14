@@ -27,14 +27,14 @@ public class MediaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media);
 
-        checkStoragePermissions();
+        checkStoragePermissions(); //Check storage access permissions when the app starts.
     }
 
+    //If permission is already granted; try to create directory. Otherwise request permission.
     private void checkStoragePermissions()
     {
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
         {
-            //notifyUser("You already granted this permission");
             createDirectory();
         }
         else
@@ -60,15 +60,17 @@ public class MediaActivity extends AppCompatActivity {
         }
     }
 
+    //Create directory the app will use to store and access video.
+    @SuppressWarnings("All")
     private void createDirectory()
     {
         File directory = new File(Environment.getExternalStorageDirectory(), path);
 
-        if(!directory.exists())
+        if(!directory.exists()) //If the directory does NOT exist; create it. Otherwise, do nothing.
         {
             directory.mkdirs();
 
-            if(directory.isDirectory())
+            if(directory.isDirectory()) //Notify the user if the directory could be created or not.
             {
                 notifyUser("Directory Created");
             }
@@ -79,7 +81,7 @@ public class MediaActivity extends AppCompatActivity {
         }
     }
 
-    //Display toast messages to the user
+    //Function to simplify the process of showing toast messages.
     private void notifyUser(String message)
     {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();

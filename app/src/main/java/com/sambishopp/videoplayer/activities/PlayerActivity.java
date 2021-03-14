@@ -44,7 +44,7 @@ public class PlayerActivity extends AppCompatActivity {
         super.onResume();
         hideSystemUi();
 
-        if(player == null)
+        if(player == null) //Check if the player has been initialised yet. If not; initialise it.
         {
             initializePlayer();
         }
@@ -53,15 +53,16 @@ public class PlayerActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        releasePlayer();
+        releasePlayer(); //Release the player when the activity pauses
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        releasePlayer();
+        releasePlayer(); //Release the player when the activity stops
     }
 
+    //Prepare the player to play media and set the file to be played back.
     private void initializePlayer()
     {
         player = new SimpleExoPlayer.Builder(this).build();
@@ -75,6 +76,7 @@ public class PlayerActivity extends AppCompatActivity {
         player.prepare();
     }
 
+    //Hide the system UI when the player is visible.
     private void hideSystemUi() {
         playerView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LOW_PROFILE
@@ -85,6 +87,7 @@ public class PlayerActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
 
+    //Release the player and record data about the player's current state at the time of release.
     private void releasePlayer() {
         if (player != null) {
             playWhenReady = player.getPlayWhenReady();
