@@ -25,7 +25,7 @@ public class MediaActivity extends AppCompatActivity {
 
     private int STORAGE_WRITE_PERMISSION_CODE = 100;
     private String path = "PlayerTest" + "/" + "videos";
-    private Uri videoUri = Uri.parse("PlayerTest" + "/" + "videos" + "video.mp4");
+    private Uri videoUri = Uri.parse("PlayerTest" + "/" + "videos" + "/" + "video.mp4");
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,8 @@ public class MediaActivity extends AppCompatActivity {
         Button playVideo = findViewById(R.id.playerTest);
         playVideo.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 openActivity();
             }
         });
@@ -76,6 +77,7 @@ public class MediaActivity extends AppCompatActivity {
             }
             else
             {
+                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_WRITE_PERMISSION_CODE); //Temporary solution for testing purposes. Remove / change where this is used later.
                 notifyUser("Storage Write Permission: Denied");
             }
         }

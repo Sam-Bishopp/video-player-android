@@ -66,7 +66,8 @@ public class PlayerActivity extends AppCompatActivity {
     {
         player = new SimpleExoPlayer.Builder(this).build();
 
-        Uri uri = getIntent().getParcelableExtra("videoUri");
+        //Uri uri = getIntent().getParcelableExtra("videoUri");
+        Uri uri = Uri.parse("PlayerTest" + "/" + "videos" + "/" + "video.mp4");
         //Uri uri = RawResourceDataSource.buildRawResourceUri(R.raw.test);
 
         playerView.setPlayer(player);
