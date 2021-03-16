@@ -12,7 +12,6 @@ import com.sambishopp.videoplayer.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-
 /**
  * Fullscreen activity to play media.
  */

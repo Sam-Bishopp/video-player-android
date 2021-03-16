@@ -1,6 +1,7 @@
 package com.sambishopp.videoplayer.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sambishopp.videoplayer.R;
+import com.sambishopp.videoplayer.activities.PlayerActivity;
 import com.sambishopp.videoplayer.data.VideoFiles;
 
 import java.io.File;
@@ -42,8 +44,18 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
     {
         holder.fileName.setText(videoFiles.get(position).getTitle());
 
-        Glide.with(context).load(new File(videoFiles.get(position).getPath()))
+        Glide.with(context)
+                .load(new File(videoFiles.get(position).getPath()))
                 .into(holder.thumbnail);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent mediaIntent = new Intent(context, PlayerActivity.class);
+                mediaIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(mediaIntent);
+            }
+        });
     }
 
     @Override
