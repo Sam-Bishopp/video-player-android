@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.sambishopp.videoplayer.R;
 import com.sambishopp.videoplayer.data.VideoFiles;
+import com.sambishopp.videoplayer.ui.MediaAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Activity to play show available media from a specific folder.
@@ -29,14 +32,26 @@ public class MediaActivity extends AppCompatActivity {
     private int STORAGE_WRITE_PERMISSION_CODE = 100;
 
     private String path = "PlayerTest" + "/" + "videos";
+    private File directory = new File(Environment.getExternalStorageDirectory(), path);
     private Uri videoUri = Uri.parse("PlayerTest" + "/" + "videos" + "/" + "video.mp4");
 
     static ArrayList<VideoFiles> videoFiles = new ArrayList<>();
+    RecyclerView recyclerView;
+    MediaAdapter mediaAdapter;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media);
+
+        recyclerView = findViewById(R.id.videoRecyclerView);
+        if(videoFiles != null && videoFiles.size() > 0)
+        {
+            mediaAdapter = new MediaAdapter(getApplicationContext(), videoFiles);
+            recyclerView.setAdapter(mediaAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
+        }
 
         checkStoragePermissions(); //Check storage access permissions when the app starts.
     }
@@ -64,7 +79,6 @@ public class MediaActivity extends AppCompatActivity {
             {
                 createDirectory();
                 videoFiles = getAllVideos(this);
-                //notifyUser("Storage Write Permission: Granted");
             }
             else
             {
@@ -78,8 +92,6 @@ public class MediaActivity extends AppCompatActivity {
     @SuppressWarnings("All")
     private void createDirectory()
     {
-        File directory = new File(Environment.getExternalStorageDirectory(), path);
-
         if(!directory.exists()) //If the directory does NOT exist; create it. Otherwise, do nothing.
         {
             directory.mkdirs();
@@ -100,7 +112,7 @@ public class MediaActivity extends AppCompatActivity {
     {
         ArrayList<VideoFiles> tempVideoFiles = new ArrayList<>();
 
-        Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI; //TODO: Change this to only search the directory created by the app. Currently searches everything.
         String[] projection = {
                 MediaStore.Video.Media._ID,
                 MediaStore.Video.Media.DATA,
