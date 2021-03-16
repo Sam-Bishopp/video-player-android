@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Adapter to show media from "videoFiles" in recycler view.
+ */
 public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHolder> {
 
     private Context context;
@@ -48,6 +51,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
                 .load(new File(videoFiles.get(position).getPath()))
                 .into(holder.thumbnail);
 
+        //When an item is clicked, start the player activity and play the video.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

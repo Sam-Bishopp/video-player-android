@@ -40,7 +40,6 @@ public class MediaActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     MediaAdapter mediaAdapter;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,17 +47,24 @@ public class MediaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_media);
 
         recyclerView = findViewById(R.id.videoRecyclerView);
-        if(videoFiles != null && videoFiles.size() > 0)
-        {
-            mediaAdapter = new MediaAdapter(getApplicationContext(), videoFiles);
-            recyclerView.setAdapter(mediaAdapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
-        }
+        loadMedia();
 
         checkStoragePermissions(); //Check storage access permissions when the app starts.
     }
 
-    //If permission is already granted; try to create directory. Otherwise request permission.
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loadMedia();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadMedia();
+    }
+
+    //If permission is already granted; create the directory. Otherwise request permission.
     private void checkStoragePermissions()
     {
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
@@ -146,6 +152,16 @@ public class MediaActivity extends AppCompatActivity {
             cursor.close();
         }
         return tempVideoFiles;
+    }
+
+    private void loadMedia()
+    {
+        if(videoFiles != null && videoFiles.size() > 0)
+        {
+            mediaAdapter = new MediaAdapter(getApplicationContext(), videoFiles);
+            recyclerView.setAdapter(mediaAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
+        }
     }
 
     //Function to simplify the process of showing toast messages.

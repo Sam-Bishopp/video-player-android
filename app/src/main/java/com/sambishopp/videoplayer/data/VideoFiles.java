@@ -1,7 +1,7 @@
 package com.sambishopp.videoplayer.data;
 
 /**
- * Class formatting & containing data related to video files.
+ * Class to format & contain data related to video files.
  */
 public class VideoFiles {
     private String id;
