@@ -7,10 +7,11 @@ import android.view.View;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.sambishopp.videoplayer.R;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import static com.sambishopp.videoplayer.activities.MediaActivity.videoFiles;
 
 /**
  * Fullscreen activity to play media.
@@ -24,12 +25,23 @@ public class PlayerActivity extends AppCompatActivity {
     private int currentWindow = 0;
     private long playbackPosition = 0;
 
+    int position = -1;
+    MediaItem mediaItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
         playerView = findViewById(R.id.videoPlayer);
+        position = getIntent().getIntExtra("position", -1);
+        String path = videoFiles.get(position).getPath();
+
+        if(path != null)
+        {
+            Uri selectedMedia = Uri.parse(path);
+            mediaItem = MediaItem.fromUri(selectedMedia);
+        }
     }
 
     @Override
@@ -66,12 +78,8 @@ public class PlayerActivity extends AppCompatActivity {
     {
         player = new SimpleExoPlayer.Builder(this).build();
 
-        //Uri uri = getIntent().getParcelableExtra("videoUri");
-        //Uri uri = Uri.parse("PlayerTest" + "/" + "videos" + "/" + "video.mp4");
-        Uri uri = RawResourceDataSource.buildRawResourceUri(R.raw.test);
-
         playerView.setPlayer(player);
-        player.setMediaItem(MediaItem.fromUri(uri));
+        player.setMediaItem(mediaItem);
         player.setPlayWhenReady(playWhenReady);
         player.seekTo(currentWindow, playbackPosition);
         player.prepare();

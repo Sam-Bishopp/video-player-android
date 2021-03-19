@@ -34,7 +34,6 @@ public class MediaActivity extends AppCompatActivity {
 
     private String path = "PlayerTest" + "/" + "videos";
     private File directory = new File(Environment.getExternalStorageDirectory(), path);
-    private Uri videoUri = Uri.parse("PlayerTest" + "/" + "videos" + "/" + "video.mp4");
 
     static ArrayList<VideoFiles> videoFiles = new ArrayList<>();
     RecyclerView recyclerView;
@@ -90,7 +89,8 @@ public class MediaActivity extends AppCompatActivity {
             }
             else
             {
-                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_WRITE_PERMISSION_CODE); //Temporary solution for testing purposes. Remove / change where this is used later.
+                //TODO: Temporary solution for testing purposes. Remove / change where this is used later.
+                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_WRITE_PERMISSION_CODE);
                 notifyUser("Storage Write Permission: Denied");
             }
         }

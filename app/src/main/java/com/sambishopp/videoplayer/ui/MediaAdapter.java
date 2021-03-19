@@ -25,13 +25,13 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHolder> {
 
     private Context context;
-    private ArrayList<VideoFiles> videoFiles;
+    static ArrayList<VideoFiles> videoFiles;
     View view;
 
     public MediaAdapter(Context context, ArrayList<VideoFiles> videoFiles)
     {
         this.context = context;
-        this.videoFiles = videoFiles;
+        MediaAdapter.videoFiles = videoFiles;
     }
 
     @NonNull
@@ -43,9 +43,9 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MediaViewHolder holder, int position)
+    public void onBindViewHolder(@NonNull MediaViewHolder holder, final int position)
     {
-        holder.fileName.setText(videoFiles.get(position).getTitle());
+        holder.fileName.setText(videoFiles.get(position).getDuration()); //Why does duration have the video title???
 
         Glide.with(context)
                 .load(new File(videoFiles.get(position).getPath()))
@@ -56,6 +56,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
             @Override
             public void onClick(View view) {
                 Intent mediaIntent = new Intent(context, PlayerActivity.class);
+                mediaIntent.putExtra("position", position);
                 mediaIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(mediaIntent);
             }
