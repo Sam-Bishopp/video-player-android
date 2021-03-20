@@ -1,5 +1,6 @@
 package com.sambishopp.videoplayer.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.sambishopp.videoplayer.data.VideoFiles;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,9 +47,18 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
     @Override
     public void onBindViewHolder(@NonNull MediaViewHolder holder, final int position)
     {
+        long videoDuration = Long.parseLong(videoFiles.get(position).getDuration()); //Video duration in milliseconds.
+
+        //Format to show video duration in Hours, Minutes and Seconds.
+        @SuppressLint("DefaultLocale") String hms = String.format("%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(videoDuration),
+                TimeUnit.MILLISECONDS.toMinutes(videoDuration) -
+                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(videoDuration)),
+                TimeUnit.MILLISECONDS.toSeconds(videoDuration) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(videoDuration)));
+
         holder.fileName.setText(videoFiles.get(position).getFileName());
-        holder.duration.setText(videoFiles.get(position).getDuration());
-        //TODO: Get duration of each video
+        holder.duration.setText(hms);
 
         Glide.with(context)
                 .load(new File(videoFiles.get(position).getPath()))
