@@ -45,7 +45,9 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
     @Override
     public void onBindViewHolder(@NonNull MediaViewHolder holder, final int position)
     {
-        holder.fileName.setText(videoFiles.get(position).getDuration()); //Why does duration have the video title???
+        holder.fileName.setText(videoFiles.get(position).getFileName());
+        holder.duration.setText(videoFiles.get(position).getDuration());
+        //TODO: Get duration of each video
 
         Glide.with(context)
                 .load(new File(videoFiles.get(position).getPath()))

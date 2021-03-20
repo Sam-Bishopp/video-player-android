@@ -126,10 +126,10 @@ public class MediaActivity extends AppCompatActivity {
                 MediaStore.Video.Media._ID,
                 MediaStore.Video.Media.DATA,
                 MediaStore.Video.Media.TITLE,
+                MediaStore.Video.Media.DISPLAY_NAME,
                 MediaStore.Video.Media.SIZE,
                 MediaStore.Video.Media.DATE_ADDED,
-                MediaStore.Video.Media.DURATION,
-                MediaStore.Video.Media.DISPLAY_NAME
+                MediaStore.Video.Media.DURATION
         };
         String selection = MediaStore.Video.Media.DATA + " LIKE ? ";
         String[] selectionArgs = new String[] {"%" + path + "%"};
@@ -143,12 +143,12 @@ public class MediaActivity extends AppCompatActivity {
                 String id = cursor.getString(0);
                 String path = cursor.getString(1);
                 String title = cursor.getString(2);
-                String size = cursor.getString(3);
-                String dateAdded = cursor.getString(4);
-                String duration = cursor.getString(5);
-                String fileName = cursor.getString(6);
+                String fileName = cursor.getString(3);
+                String size = cursor.getString(4);
+                String dateAdded = cursor.getString(5);
+                String duration = cursor.getString(6);
 
-                VideoFiles videoFiles = new VideoFiles(id, path, title, size, dateAdded, duration, fileName);
+                VideoFiles videoFiles = new VideoFiles(id, path, title, fileName, size, dateAdded, duration);
                 Log.e("Path", path);
                 tempVideoFiles.add(videoFiles);
             }
