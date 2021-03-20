@@ -120,7 +120,8 @@ public class MediaActivity extends AppCompatActivity {
     {
         ArrayList<VideoFiles> tempVideoFiles = new ArrayList<>();
 
-        Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI; //TODO: Change this to only search the directory created by the app. Currently searches entire MediaStore.
+        //Variables for cursor arguments. Specifies what the cursor should return + where to look
+        Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {
                 MediaStore.Video.Media._ID,
                 MediaStore.Video.Media.DATA,
@@ -130,8 +131,10 @@ public class MediaActivity extends AppCompatActivity {
                 MediaStore.Video.Media.DURATION,
                 MediaStore.Video.Media.DISPLAY_NAME
         };
+        String selection = MediaStore.Video.Media.DATA + " LIKE ? ";
+        String[] selectionArgs = new String[] {"%" + path + "%"};
 
-        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+        Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
 
         if(cursor != null)
         {
