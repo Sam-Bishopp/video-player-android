@@ -42,7 +42,7 @@ public class MediaActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.colorBackground));
+        getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         setContentView(R.layout.activity_media);
 
         recyclerView = findViewById(R.id.videoRecyclerView);
@@ -120,7 +120,7 @@ public class MediaActivity extends AppCompatActivity {
     {
         ArrayList<VideoFiles> tempVideoFiles = new ArrayList<>();
 
-        Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI; //TODO: Change this to only search the directory created by the app. Currently searches everything.
+        Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI; //TODO: Change this to only search the directory created by the app. Currently searches entire MediaStore.
         String[] projection = {
                 MediaStore.Video.Media._ID,
                 MediaStore.Video.Media.DATA,
@@ -154,6 +154,7 @@ public class MediaActivity extends AppCompatActivity {
         return tempVideoFiles;
     }
 
+    //Reloads Media Adapter and checks for new media to list in recycler view.
     private void loadMedia()
     {
         if(videoFiles != null && videoFiles.size() > 0)

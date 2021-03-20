@@ -37,6 +37,7 @@ public class PlayerActivity extends AppCompatActivity {
         position = getIntent().getIntExtra("position", -1);
         String path = videoFiles.get(position).getPath();
 
+        //If path variable is initialised, parse the Uri and place it into the media item.
         if(path != null)
         {
             Uri selectedMedia = Uri.parse(path);
