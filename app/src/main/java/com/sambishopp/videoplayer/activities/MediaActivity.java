@@ -2,6 +2,7 @@ package com.sambishopp.videoplayer.activities;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sambishopp.videoplayer.R;
@@ -19,6 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -35,6 +39,9 @@ public class MediaActivity extends AppCompatActivity {
     private String path = "PlayerTest" + "/" + "videos";
     private File directory = new File(Environment.getExternalStorageDirectory(), path);
 
+    TextView noPermissionsText; //This Text view appears when the app does not have storage permissions.
+    TextView noDataText; //This Text view appears when the app does not detect any media to display in the recycler view.
+
     static ArrayList<VideoFiles> videoFiles = new ArrayList<>();
     RecyclerView recyclerView;
     MediaAdapter mediaAdapter;
@@ -44,6 +51,17 @@ public class MediaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         setContentView(R.layout.activity_media);
+
+        noPermissionsText = findViewById(R.id.noPermissionText);
+        noDataText = findViewById(R.id.noDataText);
+
+        //If permissions have not been granted, the user can click this TextView to make the app request storage permissions.
+        noPermissionsText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkStoragePermissions();
+            }
+        });
 
         recyclerView = findViewById(R.id.videoRecyclerView);
         loadMedia();
@@ -68,6 +86,7 @@ public class MediaActivity extends AppCompatActivity {
     {
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
         {
+            noPermissionsText.setVisibility(View.GONE);
             createDirectory();
             videoFiles = getAllVideos(this);
         }
@@ -84,14 +103,28 @@ public class MediaActivity extends AppCompatActivity {
         {
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
+                noPermissionsText.setVisibility(View.GONE);
                 createDirectory();
                 videoFiles = getAllVideos(this);
             }
-            else
+            else //If the user denies permission, show an alert dialog to explain the reason why permission is needed.
             {
-                //TODO: Temporary solution for testing purposes. Remove / change where this is used later.
-                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_WRITE_PERMISSION_CODE);
-                notifyUser("Storage Write Permission: Denied");
+                new AlertDialog.Builder(this)
+                        .setTitle("Permissions Request")
+                        .setMessage("This app requires storage permissions to be able to create a folder for this app to store videos. To use this app, please allow storage permissions.")
+                        .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                checkStoragePermissions(); //App will try to ask for permission again.
+                            }
+                        })
+                        .setNegativeButton("Deny", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss(); //Alert dialog is dismissed.
+                            }
+                        })
+                        .show();
             }
         }
     }
@@ -106,11 +139,11 @@ public class MediaActivity extends AppCompatActivity {
 
             if(directory.isDirectory()) //Notify the user if the directory could be created or not.
             {
-                notifyUser("Directory Created");
+                notifyUserToast("Directory Created");
             }
             else
             {
-                notifyUser("Failed to create directory");
+                notifyUserToast("Failed to create directory");
             }
         }
     }
@@ -160,16 +193,21 @@ public class MediaActivity extends AppCompatActivity {
     //Reloads Media Adapter and checks for new media to list in recycler view.
     private void loadMedia()
     {
-        if(videoFiles != null && videoFiles.size() > 0)
+        if(videoFiles != null && videoFiles.size() > 0) //If there is media to show, display it.
         {
+            noDataText.setVisibility(View.GONE);
             mediaAdapter = new MediaAdapter(getApplicationContext(), videoFiles);
             recyclerView.setAdapter(mediaAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
         }
+        else if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) //Otherwise, set a message to let the user know that no data could be found / how to potentially fix the problem.
+        {
+            noDataText.setVisibility(View.VISIBLE);
+        }
     }
 
     //Function to simplify the process of showing toast messages.
-    private void notifyUser(String message)
+    private void notifyUserToast(String message)
     {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
